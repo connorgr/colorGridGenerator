@@ -38,6 +38,7 @@ Thumbs.db
 
 # Directories #
 ###############
+data/*
 grids/
 bower_components/
 node_modules/
