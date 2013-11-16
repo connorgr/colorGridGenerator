@@ -16,5 +16,5 @@ For convenience, we rely on `bower` and `npm`. After cloning the repo, just run 
 
 # Generating your color grids
 The pipeline consists of two stages:
-1. Creating JSON grid information files for each grid
-2. Creating the SVG files based on the JSON information
+1. Creating JSON grid information files for each grid: `python makeAllGrids.py`
+2. Creating the SVG files based on the JSON information: `node makeGridSvgs.js --outdir=grids --json=data/data.json`
