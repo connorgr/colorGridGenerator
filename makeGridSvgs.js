@@ -7,6 +7,19 @@ var jsdom = require('jsdom')
 // Functions
 
 function executeOnJson(data) {
+  function findQuadrant(numColumns, numRows, targetLoc) {
+    if(targetLoc === undefined) {
+      return 'NoTgt';
+    }
+    // Assumes row major order
+    // Left, Right, Top, Bottom
+    var colIndex = targetLoc % numColumns,
+        rowIndex = targetLoc / numRows;
+
+    var horizontal = colIndex < numColumns / 2 ? 'L' : 'R',
+        vertical = rowIndex < numRows / 2 ? 'T' : 'B';
+    return vertical+horizontal;
+  }
   // Load the data and parse into shorter variable handles
   var colors = data.colors,
       gridGroups = data.grids,
@@ -30,12 +43,16 @@ function executeOnJson(data) {
         var gridJSON = gridsSurroundVariants[i],
             adjColors = gridJSON.adjColors,
             grid = gridJSON['grid'],
+            targetLoc = gridJSON['targetLoc'],
             targetPresent = gridJSON['target'],
             sizes = [10,20,30,40,50],
             spacing = 5;
 
+
+        var quadrant = findQuadrant(numColumns, numRows, targetLoc);
+
         for(var size in sizes) {
-          var fileName = 'grid_' + numRows + 'x' + numColumns + '_' + squareLen + '_id' + h,
+          var fileName = 'grid_' + numColumns + 'x' + numRows + '_' + squareLen + '_id' + h + '_tgtLoc' + quadrant,
               squareLen = sizes[size],
               gridData = {'adjColors':adjColors, 'colorSet':colors, 'grid': grid, 'numColors':
                   numColors, 'numColumns': numColumns, 'numRows': numRows, 'spacing': spacing,
