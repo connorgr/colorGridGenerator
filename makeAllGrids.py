@@ -18,7 +18,7 @@ jsonTwelve = json.dumps(twelve)
 jsonFourteen = json.dumps(fourteen)
 
 # last color is target
-colors = ['rgb(124,110,16)','rgb(138,70,74)','rgb(24,75,86)','rgb(27,64,41)','rgb(100,60,126)']
+colors = ['rgb(120,106,24)','rgb(131,71,80)','rgb(23,73,95)','rgb(0,68,43)','rgb(98,63,117)']
 lengths = [10, 20, 30, 40, 50]
 spacing = 5
 

@@ -44,16 +44,14 @@ function executeOnJson(data) {
             adjColors = gridJSON.adjColors,
             grid = gridJSON['grid'],
             targetLoc = gridJSON['targetLoc'],
-            targetPresent = gridJSON['target'],
-            sizes = [10,20,30,40,50],
-            spacing = 5;
+            targetPresent = gridJSON['target'];
 
 
         var quadrant = findQuadrant(numColumns, numRows, targetLoc);
 
-        for(var size in sizes) {
-          var fileName = 'grid_' + numColumns + 'x' + numRows + '_' + squareLen + '_id' + h + '_tgtLoc' + quadrant,
-              squareLen = sizes[size],
+        for(var size in lengths) {
+          var squareLen = lengths[size],
+              fileName = 'grid_' + numColumns + 'x' + numRows + '_' + squareLen + '_id' + h + '_tgtLoc' + quadrant,
               gridData = {'adjColors':adjColors, 'colorSet':colors, 'grid': grid, 'numColors':
                   numColors, 'numColumns': numColumns, 'numRows': numRows, 'spacing': spacing,
                   'squareLen': squareLen};

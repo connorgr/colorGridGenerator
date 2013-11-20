@@ -9,17 +9,17 @@ function makeGrid(container, data) {
 
   var gridFieldHeight = numRows*(sqLen+sqSpace) - sqSpace,
       gridFieldWidth = numCols*(sqLen+sqSpace) - sqSpace,
-      margin = {'bottom': 5, 'left': 5, 'right': 5, 'top': 5},
+      margin = {'bottom': 2, 'left': 2, 'right': 2, 'top': 2},
       fullWidth = gridFieldWidth + margin.left + margin.right,
       fullHeight = gridFieldHeight + margin.top + margin.bottom;
 
-  var borderColor = '#888';
+  var borderColor = '#333';
 
   var svg = container.append('svg')
           .attr('height', fullHeight)
           .attr('id', 'grid')
           .attr('width', fullWidth)
-          .style('border', '1px solid '+borderColor)
+          .style('border', '1px solid '+ borderColor)
           .style('display', 'inline-block'),
       rectG = svg.append('g').attr('transform', 'translate('+margin.left+','+margin.top+')');
 
