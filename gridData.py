@@ -22,53 +22,48 @@ def orderedGrid(numColors, numCols, numRows):
 
 
 def variantGrids(grid, numColors, numCols, numRows):
-  # Determines if the cell index is a valid target (i.e., not an edge cell for
-  #   each quadrant of the color grid)
-  def isTgtCandidate(cellId):
-    colIndex = cellId % numCols
-    rowIndex = cellId / numRows
-    # check frame edges
-    if colIndex == 0 or colIndex == numCols-1 or rowIndex == 0 or rowIndex ==\
-        numRows-1:
-      return False
-    # check quadrant edges
-    if colIndex == numCols/2-1 or colIndex == numCols/2 or rowIndex ==\
-        numRows/2-1 or rowIndex == numRows/2:
-      return False
-    return True
+  # randInt is inclusive, hence generator weirdness
+  def pickQuadrantTgts(numCols, numRows):
+    # Pick upper left quadrant
+    ulRow = random.randint(1, numRows/2 - 2)
+    ulCol = random.randint(1, numCols/2 - 2)
+    ul = ulRow*numCols + ulCol # row major index
+    ulObj = {'index': ul,'quadrant':'ul'}
+    # Pick upper right quadrant
+    urRow = random.randint(1, numRows/2 - 2)
+    urCol = random.randint(numCols/2 + 1, numCols - 2)
+    ur = urRow*numCols + urCol
+    urObj = {'index': ur,'quadrant':'ur'}
+    # Pick lower right quadrant
+    lrRow = random.randint(numRows/2 + 1, numRows - 2)
+    lrCol = random.randint(numCols/2 + 1, numCols - 2)
+    lr = lrRow*numCols + lrCol
+    lrObj = {'index': lr,'quadrant':'lr'}
+    # Pick lower left quadrant
+    llRow = random.randint(numRows/2 + 1, numRows - 2)
+    llCol = random.randint(1, numCols/2 - 2)
+    ll = llRow*numCols + llCol
+    llObj = {'index': ll,'quadrant':'ll'}
 
-  # we need to find locations that have 1 - numColors neighboring colors, then
-  #   add a target in a randomly selected location in the set of possibilities
-  colorSets = dict()
-  for cell in grid:
-    valid = isTgtCandidate(cell['id'])
-    if valid:
-      nc = cell['numColors']
-      if nc in colorSets:
-        colorSets[nc].append(cell['id'])
-      else:
-        colorSets[nc] = [cell['id']]
+    return [ulObj,urObj,lrObj,llObj]
 
-  # Randomly select a cell location for each numColor set
-  # Construct a list of grids with targets as well as original stimuli without
+
+  # Check if tgts can exist in all quadrants (targets need 1 cell edge buffer)
+  if numCols < 5 or numRows < 5:
+    raise 'Error: no target selection possible'
+
+  tgts = pickQuadrantTgts(numCols, numRows)
+
+  # Prepare a new object to contain the original grid and target variants
   newGrids = [{'grid': grid, 'target': False}]
 
-  # numColors can be used as shorthand for color scale index for target color
-  targetColor = numColors
-
-  # Remove the edges from variant consideration
-  # colorSets.pop(None)
-
-  # Populate newGrids with randomly selected locations for targets, such that
-  #   there exists one target per number of adjacent dell color categories
-  for k,v in colorSets.iteritems():
+  # Add the target grid variants to the return object
+  targetColor = numColors # the last color will always be the color number
+  for tgt in tgts:
     tmpGrid = copy.deepcopy(grid)
-    randIndex = choice(v)
-
-    tmpGrid[randIndex]['color'] = targetColor
-    numAdjColors = tmpGrid[randIndex]['numColors']
-    newGrids.append({'adjColors': numAdjColors, 'grid': tmpGrid, 'target':
-        True, 'targetLoc': randIndex})
+    tmpGrid[tgt['index']]['color'] = targetColor
+    newGrids.append({'grid': tmpGrid, 'target': True, 'targetLoc':\
+        tgt['index'], 'quadrant':tgt['quadrant']})
 
   return newGrids
 
