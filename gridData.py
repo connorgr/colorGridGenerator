@@ -12,16 +12,89 @@ import copy
 
 def makeGrid(grouped, numColors, numCols, numRows):
   if grouped == True:
-    return orderedGrid(numColors, numCols, numRows)
+    grid = orderedGrid(numColors, numCols, numRows)
+    return grid
   else:
-    return randomGrid(numColors, numCols, numRows)
+    grid = randomGrid(numColors, numCols, numRows)
+    return grid
 
 
 def orderedGrid(numColors, numCols, numRows):
-  return None
+  numElems = numRows * numCols
+  grid = [None for i in range(numElems)]
+
+  for i in range(len(grid)):
+    color = -1
+    if i/numRows < numRows/2:
+      if i%numCols < numCols/2:
+        color = 0# ul
+      else:
+        color = 1# ur
+    else:
+      if i%numCols < numCols/2:
+        color = 2# ll
+      else:
+        color = 3# lr
+    # we assign each grid cell an object with both color and an id to make each
+    # element unique. Matter of convenience for javascript's .indexOf() w/ d3
+    grid[i] = {'color': color, 'id': i}
+
+  return grid
 
 
-def variantGrids(grid, numColors, numCols, numRows):
+def randomGrid(numColors, numCols, numRows):
+  def getRandomIndex(distribution, numColors):
+    found = False
+    while not found:
+      i = random.randint(0, numColors-1)
+      if distribution[i] > 0:
+        return i
+
+  numElems = numRows * numCols
+  maxColors = numElems/numColors
+
+  # color distribution counter
+  colorDist = [maxColors for i in range(0,numColors)]
+  colorsLeft = numElems%numColors
+
+  # Randomly assign the number of color instances yet to be assigned to squares
+  for i in range(0,colorsLeft):
+    indexFound = False
+    while not indexFound:
+      index = random.randint(0, numColors-1)
+      if colorDist[index] == maxColors:
+        indexFound = True
+    colorDist[index] = colorDist[index] + 1
+
+  grid = [None for i in range(numElems)]
+
+  for i in range(len(grid)):
+    color = getRandomIndex(colorDist, numColors)
+    # we assign each grid cell an object with both color and an id to make each
+    # element unique. Matter of convenience for javascript's .indexOf() w/ d3
+    grid[i] = {'color': color, 'id': i}
+    colorDist[color] = colorDist[color] - 1
+
+  return grid
+
+
+def start(grouped, numColors, numCols, numGrids, numRows):
+  grids = [makeGrid(grouped, numColors, numCols, numRows) for i in range(numGrids)]
+  if grouped == False:
+    # Get rid of duplicate grids
+    grids.sort()
+    grids = list(grids for grids,_ in itertools.groupby(grids))
+    grids = [variantRandGrids(grid, numColors, numCols, numRows) for grid in grids]
+  else:
+    grids.sort()
+    grids = list(grids for grids,_ in itertools.groupby(grids))
+    grids = [variantRandGrids(grid, numColors, numCols, numRows) for grid in grids]
+
+  return {'grids': grids, 'numColors': numColors, 'numColumns':
+      numCols, 'numRows': numRows }
+
+
+def variantRandGrids(grid, numColors, numCols, numRows):
   # randInt is inclusive, hence generator weirdness
   def pickQuadrantTgts(numCols, numRows):
     # Pick upper left quadrant
@@ -66,54 +139,6 @@ def variantGrids(grid, numColors, numCols, numRows):
         tgt['index'], 'quadrant':tgt['quadrant']})
 
   return newGrids
-
-
-def randomGrid(numColors, numCols, numRows):
-  def getRandomIndex(distribution, numColors):
-    found = False
-    while not found:
-      i = random.randint(0, numColors-1)
-      if distribution[i] > 0:
-        return i
-
-  numElems = numRows * numCols
-  maxColors = numElems/numColors
-
-  # color distribution counter
-  colorDist = [maxColors for i in range(0,numColors)]
-  colorsLeft = numElems%numColors
-
-  # Randomly assign the number of color instances yet to be assigned to squares
-  for i in range(0,colorsLeft):
-    indexFound = False
-    while not indexFound:
-      index = random.randint(0, numColors-1)
-      if colorDist[index] == maxColors:
-        indexFound = True
-    colorDist[index] = colorDist[index] + 1
-
-  grid = [None for i in range(numElems)]
-
-  for i in range(len(grid)):
-    color = getRandomIndex(colorDist, numColors)
-    # we assign each grid cell an object with both color and an id to make each
-    # element unique. Matter of convenience for javascript's .indexOf() w/ d3
-    grid[i] = {'color': color, 'id': i}
-    colorDist[color] = colorDist[color] - 1
-
-  return grid
-
-
-def start(grouped, numColors, numCols, numGrids, numRows):
-  grids = [makeGrid(grouped, numColors, numCols, numRows) for i in range(numGrids)]
-
-  # Get rid of duplicate grids
-  grids.sort()
-  grids = list(grids for grids,_ in itertools.groupby(grids))
-  grids = [variantGrids(grid, numColors, numCols, numRows) for grid in grids]
-
-  return {'grids': grids, 'numColors': numColors, 'numColumns':
-      numCols, 'numRows': numRows }
 
 
 def main(argv):
