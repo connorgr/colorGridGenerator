@@ -42,7 +42,15 @@ outputBlue = makeGrids(outputColor3, False, 1)
 outputColor4 = ['rgb(0,68,43)','rgb(0,68,43)','rgb(0,68,43)','rgb(0,68,43)','rgb(98,63,117)']
 outputGreen = makeGrids(outputColor4, False, 1)
 
-outputGrouped = makeGrids(colors, True, 4)
+
+colorsGroup1 = ['rgb(120,106,24)','rgb(131,71,80)','rgb(23,73,95)','rgb(0,68,43)','rgb(98,63,117)']
+colorsGroup2 = ['rgb(131,71,80)','rgb(120,106,24)','rgb(23,73,95)','rgb(0,68,43)','rgb(98,63,117)']
+colorsGroup3 = ['rgb(131,71,80)','rgb(120,106,24)','rgb(0,68,43)','rgb(23,73,95)','rgb(98,63,117)']
+colorsGroup4 = ['rgb(120,106,24)','rgb(131,71,80)','rgb(0,68,43)','rgb(23,73,95)','rgb(98,63,117)']
+outputGrouped1 = makeGrids(colorsGroup1, True, 1)
+outputGrouped2 = makeGrids(colorsGroup2, True, 1)
+outputGrouped3 = makeGrids(colorsGroup3, True, 1)
+outputGrouped4 = makeGrids(colorsGroup4, True, 1)
 
 with open('data/data.json', 'w') as outfile:
   json.dump(outputRand, outfile)
@@ -56,5 +64,11 @@ with open('data/dataBlue.json', 'w') as outfile:
 with open('data/dataGreen.json', 'w') as outfile:
   json.dump(outputGreen, outfile)
 
-with open('data/dataGrouped.json', 'w') as outfile:
-  json.dump(outputGrouped, outfile)
+with open('data/dataGrouped1.json', 'w') as outfile:
+  json.dump(outputGrouped1, outfile)
+with open('data/dataGrouped2.json', 'w') as outfile:
+  json.dump(outputGrouped2, outfile)
+with open('data/dataGrouped3.json', 'w') as outfile:
+  json.dump(outputGrouped3, outfile)
+with open('data/dataGrouped4.json', 'w') as outfile:
+  json.dump(outputGrouped4, outfile)
