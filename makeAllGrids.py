@@ -27,8 +27,10 @@ def makeGrids(colors, grouped, numVariants):
   output = {'colors': colors, 'grids': grids, 'lengths': lengths, 'setSizes':dimensions, 'spacing': spacing, 'numVariants': numVariants}
   return output
 
+
 colors = ['rgb(120,106,24)','rgb(131,71,80)','rgb(23,73,95)','rgb(0,68,43)','rgb(98,63,117)']
 outputRand = makeGrids(colors, False, 4)
+
 
 outputColor1 = ['rgb(120,106,24)','rgb(120,106,24)','rgb(120,106,24)','rgb(120,106,24)','rgb(98,63,117)']
 outputYellow = makeGrids(outputColor1, False, 1)
