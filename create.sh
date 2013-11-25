@@ -1,10 +1,10 @@
 ulimit -n 10000
+
 python makeAllGrids.py
 echo 'makeAllGrids.py completed'
 
-
-# Running makeSingleColorGrids before each SVG creator makes each color batch
-#   have a randomized target location
+node makeGridSvgs.js --outdir=gridsRand --json=data/data.json
+echo 'randomized made'
 
 node makeGridSvgs.js --outdir=gridsBlue --json=data/dataBlue.json
 echo 'single color blue made'
@@ -19,14 +19,14 @@ node makeGridSvgs.js --outdir=gridsYellow --json=data/dataYellow.json
 echo 'single color yellow made'
 
 
-node makeGridSvgs.js --outdir=grouped1 --json=data/dataG1.json
+node makeGridSvgs.js --outdir=grouped1 --json=data/dataGrouped1.json
 echo 'group 1 made'
 
-node makeGridSvgs.js --outdir=grouped2 --json=data/dataG2.json
+node makeGridSvgs.js --outdir=grouped2 --json=data/dataGrouped2.json
 echo 'group 2 made'
 
-node makeGridSvgs.js --outdir=grouped3 --json=data/dataG3.json
+node makeGridSvgs.js --outdir=grouped3 --json=data/dataGrouped3.json
 echo 'group 3 made'
 
-node makeGridSvgs.js --outdir=grouped4 --json=data/dataG4.json
+node makeGridSvgs.js --outdir=grouped4 --json=data/dataGrouped4.json
 echo 'group 4 made'
