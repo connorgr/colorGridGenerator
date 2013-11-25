@@ -7,65 +7,36 @@ var jsdom = require('jsdom')
 // Functions
 
 function executeOnJson(data) {
-  function findQuadrant(numColumns, numRows, targetLoc) {
-    if(targetLoc === undefined) {
-      return 'NoTgt';
-    }
-    // Assumes row major order
-    // Left, Right, Top, Bottom
-    var colIndex = targetLoc % numColumns,
-        rowIndex = targetLoc / numRows;
-
-    var horizontal = colIndex < numColumns / 2 ? 'L' : 'R',
-        vertical = rowIndex < numRows / 2 ? 'T' : 'B';
-    return vertical+horizontal;
-  }
-
-
-  // Load the data and parse into shorter variable handles
   var colors = data.colors,
-      gridGroupSetSize = data['gridGroupSetSize'],
+      grids = data.grids,
       lengths = data.lengths,
+      numColors = colors.length,
+      numVariants = data.numVariants,
+      setSizes = data.setSizes,
       spacing = data.spacing;
-  // For each set size
-  for(var g in gridGroupSetSize) {
-    var gridGroupLengths = JSON.parse(gridGroupSetSize[g]);
 
-    for(var l in gridGroupLengths) {
-      var gridsOfSameLength = gridGroupLengths[l],
-          numColors = gridsOfSameLength.numColors,
-          numColumns = gridsOfSameLength.numColumns,
-          numRows = gridsOfSameLength.numRows,
-          squareLen = lengths[l],
+  for(var g in grids) {
+    var grid = grids[g].grid,
+        length = grids[g].length,
+        setSize = grids[g].setSize,
+        tgtQuadrant = grids[g].tgtQuadrant,
+        variant = grids[g].variant;
 
-          gridTargetVariants = gridsOfSameLength['grids'];
-
-      for(var v in gridTargetVariants) {
-        var gridVariants = gridTargetVariants[v];
-
-        // These are the actual varying color grids right here
-        for(var i in gridVariants) {
-          var fileName,
-              gridMeta = gridVariants[i],
-              grid = gridMeta.grid,
-              gridData = {'colorSet':colors, 'grid': grid, 'numColors':
+    var numColumns = setSize,
+        numRows = setSize,
+        gridData = {'colorSet':colors, 'grid': grid, 'numColors':
                   numColors, 'numColumns': numColumns, 'numRows': numRows,
-                  'spacing': spacing, 'squareLen': squareLen};
+                  'spacing': spacing, 'squareLen': length};
 
-          if(gridMeta.target) {
-            var quadrant = gridMeta.quadrant;
-            fileName = 'grid_' + numColumns + 'x' + numRows + '_' + squareLen + '_id' + i + '_tgtLoc' + quadrant;
-          } else {
-            fileName = fileName = 'grid_' + numColumns + 'x' + numRows + '_' + squareLen + '_id' + i + '_tgtLocNone';
-          }
-          process.stdout.write('.');
-          runHeadlessBrowser(gridData, fileName);
-        }
-      }
-    }
+    var fileName = '';
+    fileName = fileName = 'grid_' + numColumns + 'x' + numRows + '_' + length + '_' + tgtQuadrant + '_' + variant;
+
+    runHeadlessBrowser(gridData, fileName);
+    process.stdout.write('.');
   }
-  console.log('\n >>> Done');
+  console.log('\n >>> Done. Saving results to file.');
 }
+
 
 function runHeadlessBrowser(gridData, fileName) {
   jsdom.env({features:{QuerySelector:true}, html:htmlStub, src:src, done:function(errors, window) {

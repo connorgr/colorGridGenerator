@@ -9,6 +9,32 @@ import random
 import sys
 import copy
 
+
+def assignTgt(grid, numCols, numRows, quadrant, tgtColor):
+  index = 0
+  if quadrant == 'tl':
+    tlRow = random.randint(1, numRows/2 - 2)
+    tlCol = random.randint(1, numCols/2 - 2)
+    index = tlRow*numCols + tlCol # row major index
+  elif quadrant == 'tr':
+    trRow = random.randint(1, numRows/2 - 2)
+    trCol = random.randint(numCols/2 + 1, numCols - 2)
+    index = trRow*numCols + trCol
+  elif quadrant == 'br':
+    brRow = random.randint(numRows/2 + 1, numRows - 2)
+    brCol = random.randint(numCols/2 + 1, numCols - 2)
+    index = brRow*numCols + brCol
+  elif quadrant == 'bl':
+    blRow = random.randint(numRows/2 + 1, numRows - 2)
+    blCol = random.randint(1, numCols/2 - 2)
+    index = blRow*numCols + blCol
+  else:
+    raise 'Invalid quadrant given. Options = tl, tr, br, bl'
+
+  grid[index]['color'] = tgtColor
+  return grid
+
+
 # Returns a grid (list of {'color': INT, 'id': INT})
 def makeGrid(grouped, numColors, numCols, numRows):
   if grouped == True:
@@ -77,7 +103,7 @@ def randomGrid(numColors, numCols, numRows):
 
   return grid
 
-
+# Generate grids
 def start(grouped, numColors, numCols, numGrids, numRows):
   # Make grids, where each grid is a list of {'color':INT, 'id': INT}
   grids = [makeGrid(grouped, numColors, numCols, numRows) for i in range(numGrids)]
@@ -101,7 +127,7 @@ def start(grouped, numColors, numCols, numGrids, numRows):
   # {'grid': list of {'color': INT, 'id': INT},
   #  'target': Boolean}
 
-  return {'grids': grids, 'numColors': numColors, 'numColumns':
+  return {'listOfGridVariants': grids, 'numColors': numColors, 'numColumns':
       numCols, 'numRows': numRows }
 
 
