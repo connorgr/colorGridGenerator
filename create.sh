@@ -30,3 +30,5 @@ echo 'group 3 made'
 
 node makeGridSvgs.js --outdir=gridsG4 --json=data/dataGrouped4.json
 echo 'group 4 made'
+
+python mergeGridSources.py
