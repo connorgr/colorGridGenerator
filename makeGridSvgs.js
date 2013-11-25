@@ -43,11 +43,12 @@ function executeOnJson(data) {
         var gridJSON = gridsSurroundVariants[i],
             adjColors = gridJSON.adjColors,
             grid = gridJSON['grid'],
+            quadrant = gridJSON['quadrant'],
             targetLoc = gridJSON['targetLoc'],
             targetPresent = gridJSON['target'];
 
 
-        var quadrant = findQuadrant(numColumns, numRows, targetLoc);
+        //var quadrant = findQuadrant(numColumns, numRows, targetLoc);
 
         for(var size in lengths) {
           var squareLen = lengths[size],

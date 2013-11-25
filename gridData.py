@@ -69,53 +69,6 @@ def variantGrids(grid, numColors, numCols, numRows):
 
 
 def randomGrid(numColors, numCols, numRows):
-  def calcNeighborColors(cell, grid, numRows, numCols):
-    i = cell['id']
-    colIndex = i % numCols
-    rowIndex = i / numRows
-
-    neighbors = []
-
-    # left and right neighbors
-    if not colIndex == 0: # if cell column isn't left-most
-      neighbors.append(grid[i-1])
-    if not colIndex == numCols - 1: # if cell isn't right-most
-      neighbors.append(grid[i+1])
-
-    # top and bottom neighbors
-    if not rowIndex == 0: # if row isn't top-most
-      neighbors.append(grid[i - numCols]) # get above neighbor
-    if not rowIndex == numRows - 1: #if cell isn't bottom-most
-      neighbors.append(grid[i + numCols])
-
-    # diagonal neighbors
-    if not rowIndex == 0:
-      if not colIndex == 0:
-        neighbors.append(grid[i - numCols - 1])
-      if not colIndex == numCols - 1:
-        neighbors.append(grid[i - numCols + 1])
-    if not rowIndex == numRows - 1:
-      if not colIndex == 0:
-        neighbors.append(grid[i + numCols - 1])
-      if not colIndex == numCols - 1:
-        neighbors.append(grid[i + numCols + 1])
-
-    colors = [c['color'] for c in neighbors]
-    colorCounts = Counter(colors)
-    numColors = len(colorCounts)
-
-    # Make all edge cells have numColors = None to make them invalid, but still
-    #   add neighbors just in case we want that information in the future
-    if not colIndex == 0 and not colIndex == numCols - 1 and not rowIndex == 0 \
-        and not rowIndex == numRows - 1:
-      cell['numColors'] = numColors
-      cell['neighbors'] = [c['id'] for c in neighbors]
-    else:
-      cell['numColors'] = None
-      cell['neighbors'] = [c['id'] for c in neighbors]
-
-    return cell
-
   def getRandomIndex(distribution, numColors):
     found = False
     while not found:
@@ -147,8 +100,6 @@ def randomGrid(numColors, numCols, numRows):
     # element unique. Matter of convenience for javascript's .indexOf() w/ d3
     grid[i] = {'color': color, 'id': i}
     colorDist[color] = colorDist[color] - 1
-
-  grid = [calcNeighborColors(cell, grid, numRows, numCols) for cell in grid]
 
   return grid
 

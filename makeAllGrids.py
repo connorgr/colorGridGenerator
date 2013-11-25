@@ -5,11 +5,11 @@ import gridData
 # start(grouped, numColors, numCols, numGrids, numRows)
 # Returns: {'grids': grids, 'numColors': numColors, 'numColumns': numCols, 'numRows': numRows }
 
-six = gridData.start(False, 4, 6, 1, 6)
-eight = gridData.start(False, 4, 8, 1, 8)
-ten = gridData.start(False, 4, 10, 1, 10)
-twelve = gridData.start(False, 4, 12, 1, 12)
-fourteen = gridData.start(False, 4, 14, 1, 14)
+six = gridData.start(False, 4, 6, 4, 6)
+eight = gridData.start(False, 4, 8, 4, 8)
+ten = gridData.start(False, 4, 10, 4, 10)
+twelve = gridData.start(False, 4, 12, 4, 12)
+fourteen = gridData.start(False, 4, 14, 4, 14)
 
 jsonSix = json.dumps(six)
 jsonEight = json.dumps(eight)
