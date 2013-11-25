@@ -9,7 +9,7 @@ import random
 import sys
 import copy
 
-
+# Returns a grid (list of {'color': INT, 'id': INT})
 def makeGrid(grouped, numColors, numCols, numRows):
   if grouped == True:
     grid = orderedGrid(numColors, numCols, numRows)
@@ -18,7 +18,7 @@ def makeGrid(grouped, numColors, numCols, numRows):
     grid = randomGrid(numColors, numCols, numRows)
     return grid
 
-
+# Returns an ordered grid (list of {'color': INT, 'id': INT})
 def orderedGrid(numColors, numCols, numRows):
   numElems = numRows * numCols
   grid = [None for i in range(numElems)]
@@ -41,7 +41,7 @@ def orderedGrid(numColors, numCols, numRows):
 
   return grid
 
-
+# Returns a randomly colored grid (list of {'color': INT, 'id': INT})
 def randomGrid(numColors, numCols, numRows):
   def getRandomIndex(distribution, numColors):
     found = False
@@ -79,44 +79,55 @@ def randomGrid(numColors, numCols, numRows):
 
 
 def start(grouped, numColors, numCols, numGrids, numRows):
+  # Make grids, where each grid is a list of {'color':INT, 'id': INT}
   grids = [makeGrid(grouped, numColors, numCols, numRows) for i in range(numGrids)]
-  if grouped == False:
-    # Get rid of duplicate grids
-    grids.sort()
-    grids = list(grids for grids,_ in itertools.groupby(grids))
-    grids = [variantRandGrids(grid, numColors, numCols, numRows) for grid in grids]
-  else:
-    grids.sort()
-    grids = list(grids for grids,_ in itertools.groupby(grids))
-    grids = [variantRandGrids(grid, numColors, numCols, numRows) for grid in grids]
+
+  # Remove any duplicates that might have arisen
+  grids.sort()
+  grids = list(grids for grids,_ in itertools.groupby(grids))
+
+  # Create four target variants for each original grid, with a target for each
+  #   quadrant in a given grid.
+  grids = [variantGrids(grid, numColors, numCols, numRows) for grid in grids]
+
+  # Each grid with targets in grids now has the following:
+  # {'grid': list of {'color': INT, 'id': INT},
+  #  'target': Boolean,
+  #  'targetLoc': INT,
+  #  'quadrant':String}  tl, tr, bl, br
+  #
+  # OR for a grid without targets
+  #
+  # {'grid': list of {'color': INT, 'id': INT},
+  #  'target': Boolean}
 
   return {'grids': grids, 'numColors': numColors, 'numColumns':
       numCols, 'numRows': numRows }
 
 
-def variantRandGrids(grid, numColors, numCols, numRows):
+def variantGrids(grid, numColors, numCols, numRows):
   # randInt is inclusive, hence generator weirdness
   def pickQuadrantTgts(numCols, numRows):
     # Pick upper left quadrant
     ulRow = random.randint(1, numRows/2 - 2)
     ulCol = random.randint(1, numCols/2 - 2)
     ul = ulRow*numCols + ulCol # row major index
-    ulObj = {'index': ul,'quadrant':'ul'}
+    ulObj = {'index': ul,'quadrant':'tl'}
     # Pick upper right quadrant
     urRow = random.randint(1, numRows/2 - 2)
     urCol = random.randint(numCols/2 + 1, numCols - 2)
     ur = urRow*numCols + urCol
-    urObj = {'index': ur,'quadrant':'ur'}
+    urObj = {'index': ur,'quadrant':'tr'}
     # Pick lower right quadrant
     lrRow = random.randint(numRows/2 + 1, numRows - 2)
     lrCol = random.randint(numCols/2 + 1, numCols - 2)
     lr = lrRow*numCols + lrCol
-    lrObj = {'index': lr,'quadrant':'lr'}
+    lrObj = {'index': lr,'quadrant':'br'}
     # Pick lower left quadrant
     llRow = random.randint(numRows/2 + 1, numRows - 2)
     llCol = random.randint(1, numCols/2 - 2)
     ll = llRow*numCols + llCol
-    llObj = {'index': ll,'quadrant':'ll'}
+    llObj = {'index': ll,'quadrant':'bl'}
 
     return [ulObj,urObj,lrObj,llObj]
 

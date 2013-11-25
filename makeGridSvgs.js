@@ -20,47 +20,51 @@ function executeOnJson(data) {
         vertical = rowIndex < numRows / 2 ? 'T' : 'B';
     return vertical+horizontal;
   }
+
+
   // Load the data and parse into shorter variable handles
   var colors = data.colors,
-      gridGroups = data.grids,
+      gridGroupSetSize = data['gridGroupSetSize'],
       lengths = data.lengths,
       spacing = data.spacing;
+  // For each set size
+  for(var g in gridGroupSetSize) {
+    var gridGroupLengths = JSON.parse(gridGroupSetSize[g]);
 
-  // Loop through 6x6 grid dimension group, etc.
-  for(var g in gridGroups) {
-    var gridsJSON = JSON.parse(gridGroups[g]),
-        // `grids` has all variants for a given dimension
-        grids = gridsJSON.grids,
-        numColors = gridsJSON.numColors,
-        numColumns = gridsJSON.numColumns,
-        numRows = gridsJSON.numRows;
-    // Each grid of the above dimension
-    for(var h in grids) {
-      // Group of same background field, target in different locations based on
-      //   surrounding number of colors count
-      var gridsSurroundVariants = grids[h];
-      for(var i in gridsSurroundVariants) {
-        var gridJSON = gridsSurroundVariants[i],
-            adjColors = gridJSON.adjColors,
-            grid = gridJSON['grid'],
-            quadrant = gridJSON['quadrant'],
-            targetLoc = gridJSON['targetLoc'],
-            targetPresent = gridJSON['target'];
+    for(var l in gridGroupLengths) {
+      var gridsOfSameLength = gridGroupLengths[l],
+          numColors = gridsOfSameLength.numColors,
+          numColumns = gridsOfSameLength.numColumns,
+          numRows = gridsOfSameLength.numRows,
+          squareLen = lengths[l],
 
+          gridTargetVariants = gridsOfSameLength['grids'];
 
-        //var quadrant = findQuadrant(numColumns, numRows, targetLoc);
+      for(var v in gridTargetVariants) {
+        var gridVariants = gridTargetVariants[v];
 
-        for(var size in lengths) {
-          var squareLen = lengths[size],
-              fileName = 'grid_' + numColumns + 'x' + numRows + '_' + squareLen + '_id' + h + '_tgtLoc' + quadrant,
-              gridData = {'adjColors':adjColors, 'colorSet':colors, 'grid': grid, 'numColors':
-                  numColors, 'numColumns': numColumns, 'numRows': numRows, 'spacing': spacing,
-                  'squareLen': squareLen};
+        // These are the actual varying color grids right here
+        for(var i in gridVariants) {
+          var fileName,
+              gridMeta = gridVariants[i],
+              grid = gridMeta.grid,
+              gridData = {'colorSet':colors, 'grid': grid, 'numColors':
+                  numColors, 'numColumns': numColumns, 'numRows': numRows,
+                  'spacing': spacing, 'squareLen': squareLen};
+
+          if(gridMeta.target) {
+            var quadrant = gridMeta.quadrant;
+            fileName = 'grid_' + numColumns + 'x' + numRows + '_' + squareLen + '_id' + i + '_tgtLoc' + quadrant;
+          } else {
+            fileName = fileName = 'grid_' + numColumns + 'x' + numRows + '_' + squareLen + '_id' + i + '_tgtLocNone';
+          }
+          process.stdout.write('.');
           runHeadlessBrowser(gridData, fileName);
         }
       }
     }
   }
+  console.log('\n >>> Done');
 }
 
 function runHeadlessBrowser(gridData, fileName) {
