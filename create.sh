@@ -19,14 +19,14 @@ node makeGridSvgs.js --outdir=gridsYellow --json=data/dataYellow.json
 echo 'single color yellow made'
 
 
-node makeGridSvgs.js --outdir=grouped1 --json=data/dataGrouped1.json
+node makeGridSvgs.js --outdir=gridsG1 --json=data/dataGrouped1.json
 echo 'group 1 made'
 
-node makeGridSvgs.js --outdir=grouped2 --json=data/dataGrouped2.json
+node makeGridSvgs.js --outdir=gridsG2 --json=data/dataGrouped2.json
 echo 'group 2 made'
 
-node makeGridSvgs.js --outdir=grouped3 --json=data/dataGrouped3.json
+node makeGridSvgs.js --outdir=gridsG3 --json=data/dataGrouped3.json
 echo 'group 3 made'
 
-node makeGridSvgs.js --outdir=grouped4 --json=data/dataGrouped4.json
+node makeGridSvgs.js --outdir=gridsG4 --json=data/dataGrouped4.json
 echo 'group 4 made'
